@@ -40,6 +40,43 @@ namespace CommonLibrary
         #region 文件夹操作方法
 
         /// <summary>
+        /// 删除文件夹下所有文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool DeleteFiles(string path)
+        {
+            DirectoryInfo dir = new DirectoryInfo(path);
+            FileInfo[] files = dir.GetFiles();
+            try
+            {
+                foreach (var item in files)
+                {
+                    File.Delete(item.FullName);
+                }
+                if (dir.GetDirectories().Length != 0)
+                {
+                    foreach (var item in dir.GetDirectories())
+                    {
+                        if (!item.ToString().Contains("$") && (!item.ToString().Contains("Boot")))
+                        {
+                            // Console.WriteLine(item);
+
+                            DeleteFiles(dir.ToString() + "\\" + item.ToString());
+                        }
+                    }
+                }
+                Directory.Delete(path);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 删除文件
         /// </summary>
         /// <param name="filePath"></param>
